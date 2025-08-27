@@ -121,9 +121,9 @@ const Landing: React.FC = () => {
             
             <div className="bg-gray-900/50 rounded-md p-6 font-mono text-sm">
               <div className="text-gray-500 mb-2">// Real-time flow measurement dashboard</div>
-              <div className="text-blue-400">import</div> <span className="text-gray-300">{ FlowMeter, Analytics, RealTimeData }</span> <div className="text-blue-400 inline">from</div> <span className="text-green-400">'@saher/flow-systems'</span>
+              <div className="text-blue-400">import</div> <span className="text-gray-300">{'{'} FlowMeter, Analytics, RealTimeData {'}'}</span> <div className="text-blue-400 inline">from</div> <span className="text-green-400">'@saher/flow-systems'</span>
               <br /><br />
-              <div className="text-purple-400">const</div> <span className="text-yellow-400">dashboard</span> <span className="text-gray-300">=</span> <span className="text-blue-400">new</span> <span className="text-yellow-400">FlowDashboard</span><span className="text-gray-300">({</span>
+              <div className="text-purple-400">const</div> <span className="text-yellow-400">dashboard</span> <span className="text-gray-300">=</span> <span className="text-blue-400">new</span> <span className="text-yellow-400">FlowDashboard</span><span className="text-gray-300">{'('}{'{'}</span>
               <br />
               <span className="text-gray-300 ml-4">precision: </span><span className="text-green-400">'±2-5%'</span><span className="text-gray-300">,</span>
               <br />
@@ -131,7 +131,7 @@ const Landing: React.FC = () => {
               <br />
               <span className="text-gray-300 ml-4">analytics: </span><span className="text-orange-400">true</span>
               <br />
-              <span className="text-gray-300">});</span>
+              <span className="text-gray-300">{'}'}{');'}</span>
             </div>
           </div>
         </div>
