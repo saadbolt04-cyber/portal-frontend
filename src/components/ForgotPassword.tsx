@@ -154,10 +154,10 @@ const ForgotPassword: React.FC = () => {
       <div className="flex-1 flex flex-col justify-center px-6 py-12 lg:px-12">
         <div className="mx-auto w-full max-w-md">
           {/* Logo */}
-          <div className="text-center mb-8">
+          <div className="mb-8">
             <img
               src="https://saherflow.com/wp-content/uploads/2021/06/Artboard-1-copy100.svg"
-              alt="Saher Flow"
+              alt="Saher Flow Solutions"
               className="h-12 w-auto mx-auto mb-4"
             />
           </div>
@@ -170,6 +170,15 @@ const ForgotPassword: React.FC = () => {
             <ArrowLeft size={20} />
             Back to sign in
           </Link>
+
+          {/* Logo */}
+          <div className="text-center mb-8">
+            <img
+              src="https://saherflow.com/wp-content/uploads/2021/06/Artboard-1-copy100.svg"
+              alt="Saher Flow Solutions"
+              className="h-12 w-auto mx-auto mb-4"
+            />
+          </div>
 
           <div className="mb-8">
             <h2 className="text-3xl font-bold text-navy-900 mb-2">Forgot password?</h2>
