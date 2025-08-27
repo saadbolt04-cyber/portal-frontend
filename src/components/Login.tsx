@@ -80,7 +80,7 @@ const Login: React.FC = () => {
           {/* Logo */}
           <div className="text-center mb-8">
             <img
-              src="https://saherflow.com/wp-content/uploads/2021/06/Artboard-1-copy100.svg"
+              src="https://saherflow.com/wp-content/uploads/2021/06/Artboard-1-copy-2100.svg"
               alt="Saher Flow Solutions"
               className="h-12 w-auto mx-auto mb-4"
             />
