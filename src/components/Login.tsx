@@ -68,6 +68,15 @@ const Login: React.FC = () => {
       {/* Right Side - Login Form */}
       <div className="flex-1 flex flex-col justify-center px-6 py-12 lg:px-12">
         <div className="mx-auto w-full max-w-md">
+          {/* Logo */}
+          <div className="text-center mb-8">
+            <img
+              src="https://saherflow.com/wp-content/uploads/2021/06/Artboard-1-copy100.svg"
+              alt="Saher Flow"
+              className="h-12 w-auto mx-auto mb-4"
+            />
+          </div>
+
           {/* Back to Home Link */}
           <Link 
             to="/" 
