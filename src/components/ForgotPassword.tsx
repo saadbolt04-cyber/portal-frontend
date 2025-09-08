@@ -3,29 +3,31 @@ import { Link } from 'react-router-dom';
 import { Mail, ArrowLeft, CheckCircle } from 'lucide-react';
 import { useAuth } from '../hooks/useAuth';
 import AuthLayout from './AuthLayout';
+import NotificationToast from './NotificationToast';
+import { useNotification } from '../hooks/useNotification';
 
 const ForgotPassword: React.FC = () => {
   const { forgotPassword } = useAuth();
+  const { notification, showError, showSuccess, hideNotification } = useNotification();
   const [email, setEmail] = useState('');
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState('');
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
-    setError('');
 
     try {
       const result = await forgotPassword(email);
       
       if (result.success) {
+        showSuccess('Email Sent!', 'Password reset instructions have been sent to your email.');
         setIsSubmitted(true);
       } else {
-        setError(result.message);
+        showError('Reset Failed', result.message);
       }
     } catch (error) {
-      setError('An unexpected error occurred. Please try again.');
+      showError('Connection Error', 'Unable to connect to the server. Please try again.');
     } finally {
       setIsLoading(false);
     }
@@ -45,7 +47,7 @@ const ForgotPassword: React.FC = () => {
         {/* Logo fixed top-left */}
         <div className="absolute top-6 left-6 z-20">
           <img
-            src="https://saherflow.com/wp-content/uploads/2021/06/Artboard-1-copy100.svg"
+            src="https://res.cloudinary.com/drnak5yb2/image/upload/v1756278804/light_mode_logo_saher_btbdos.svg"
             alt="Saher Flow Solutions"
             className="h-10"
           />
@@ -96,9 +98,9 @@ const ForgotPassword: React.FC = () => {
 
           <div className="absolute top-6 left-6 z-20">
             <img
-              src="https://saherflow.com/wp-content/uploads/2021/06/Artboard-1-copy100.svg"
+              src="https://res.cloudinary.com/drnak5yb2/image/upload/v1756798056/output-onlinepngtools_1_gybrdb.png"
               alt="Saher Flow Solutions"
-              className="h-10"
+              className="h-12"
             />
           </div>
 
@@ -177,10 +179,18 @@ const ForgotPassword: React.FC = () => {
   }
 
   return (
+    <>
+      <NotificationToast
+        type={notification.type}
+        title={notification.title}
+        message={notification.message}
+        isVisible={notification.isVisible}
+        onClose={hideNotification}
+      />
     <AuthLayout leftContent={<PasswordContent />}>
-      <div className="w-full flex items-center justify-center bg-gradient-to-b from-navy-900 to-navy-800">
-        <div className="md:w-[80%] w-[90%]  h-full">
-          <div className="bg-white rounded-2xl shadow-xl w-full md:p-10 p-6">
+      <div className="w-full flex flex-col justify-center bg-gradient-to-b from-navy-900 to-navy-800 min-h-screen">
+        <div className="md:w-[80%] w-[90%] mx-auto">
+          <div className="bg-white rounded-2xl shadow-xl w-full md:p-10 p-6 my-8">
             {/* Back to Login Link */}
             <Link
               to="/login"
@@ -200,11 +210,6 @@ const ForgotPassword: React.FC = () => {
             </div>
 
             <form onSubmit={handleSubmit} className="space-y-6">
-              {error && (
-                <div className="bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded-lg text-sm">
-                  {error}
-                </div>
-              )}
 
               <div>
                 <label
@@ -253,6 +258,7 @@ const ForgotPassword: React.FC = () => {
         </div>
       </div>
     </AuthLayout>
+    </>
   );
 };
 

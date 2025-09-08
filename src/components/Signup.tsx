@@ -12,15 +12,16 @@ import {
 } from 'lucide-react';
 import { useAuth } from '../hooks/useAuth';
 import AuthLayout from './AuthLayout';
+import NotificationToast from './NotificationToast';
+import { useNotification } from '../hooks/useNotification';
 
 const Signup: React.FC = () => {
   const navigate = useNavigate();
   const { signup } = useAuth();
+  const { notification, showError, showSuccess, hideNotification } = useNotification();
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState('');
-  const [success, setSuccess] = useState('');
   const [formData, setFormData] = useState({
     firstName: '',
     lastName: '',
@@ -34,18 +35,16 @@ const Signup: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
-    setError('');
-    setSuccess('');
 
     // Client-side validation
     if (formData.password !== formData.confirmPassword) {
-      setError('Passwords do not match');
+      showError('Password Mismatch', 'The passwords you entered do not match. Please try again.');
       setIsLoading(false);
       return;
     }
 
     if (!formData.acceptTerms) {
-      setError('You must accept the Terms of Service and Privacy Policy');
+      showError('Terms Required', 'You must accept the Terms of Service and Privacy Policy to continue.');
       setIsLoading(false);
       return;
     }
@@ -54,16 +53,16 @@ const Signup: React.FC = () => {
       const result = await signup(formData);
       
       if (result.success) {
-        setSuccess(result.message);
+        showSuccess('Account Created!', result.message);
         // Optionally redirect to login page after a delay
         setTimeout(() => {
           navigate('/login');
         }, 3000);
       } else {
-        setError(result.message);
+        showError('Registration Failed', result.message);
       }
     } catch (error) {
-      setError('An unexpected error occurred. Please try again.');
+      showError('Connection Error', 'Unable to connect to the server. Please try again.');
     } finally {
       setIsLoading(false);
     }
@@ -91,9 +90,9 @@ const Signup: React.FC = () => {
         {/* Logo fixed top-left */}
         <div className="absolute top-6 left-6 z-20">
           <img
-            src="https://saherflow.com/wp-content/uploads/2021/06/Artboard-1-copy100.svg"
+            src="https://res.cloudinary.com/drnak5yb2/image/upload/v1756278804/light_mode_logo_saher_btbdos.svg"
             alt="Saher Flow Solutions"
-            className="h-10"
+            className="h-12"
           />
         </div>
 
@@ -133,11 +132,19 @@ const Signup: React.FC = () => {
   }
 
   return (
+    <>
+      <NotificationToast
+        type={notification.type}
+        title={notification.title}
+        message={notification.message}
+        isVisible={notification.isVisible}
+        onClose={hideNotification}
+      />
     <AuthLayout leftContent={<SignInLeftContent />}>
       {/* Right Side - Signup Form */}
-      <div className="w-full flex items-center justify-center bg-gradient-to-b from-navy-900 to-navy-800">
-        <div className="md:w-[80%] w-[90%]  h-full">
-          <div className="bg-white rounded-2xl shadow-xl w-full md:p-10 p-6">
+      <div className="w-full flex flex-col justify-center bg-gradient-to-b from-navy-900 to-navy-800 min-h-screen">
+        <div className="md:w-[80%] w-[90%] mx-auto">
+          <div className="bg-white rounded-2xl shadow-xl w-full md:p-10 p-6 my-8">
             {/* Back to Home Link */}
             <Link
               to="/"
@@ -157,17 +164,6 @@ const Signup: React.FC = () => {
             </div>
 
             <form onSubmit={handleSubmit} className="space-y-6">
-              {error && (
-                <div className="bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded-lg text-sm">
-                  {error}
-                </div>
-              )}
-
-              {success && (
-                <div className="bg-green-50 border border-green-200 text-green-600 px-4 py-3 rounded-lg text-sm">
-                  {success}
-                </div>
-              )}
 
               <div className="grid grid-cols-2 gap-4">
                 <div>
@@ -382,6 +378,7 @@ const Signup: React.FC = () => {
         </div>
       </div>
     </AuthLayout>
+    </>
   );
 };
 

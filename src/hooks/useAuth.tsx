@@ -1,5 +1,6 @@
 import { useState, useEffect, createContext, useContext, ReactNode } from 'react';
 import { apiService, User } from '../services/api';
+import { tokenService } from '../services/tokenService';
 
 interface AuthContextType {
   user: User | null;
@@ -31,16 +32,21 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   useEffect(() => {
     // Check for stored token on app load
-    const storedToken = localStorage.getItem('authToken');
+    const storedToken = tokenService.getToken();
     if (storedToken) {
       setToken(storedToken);
       // Verify token and get user data
       apiService.getCurrentUser(storedToken).then((response) => {
         if (response.success && response.data) {
           setUser(response.data.user);
+          // Schedule token refresh if needed
+          tokenService.scheduleTokenRefresh(async () => {
+            // Implement token refresh logic here if your API supports it
+            console.log('Token refresh needed');
+          });
         } else {
           // Token is invalid, remove it
-          localStorage.removeItem('authToken');
+          tokenService.clearToken();
           setToken(null);
         }
         setIsLoading(false);
@@ -58,7 +64,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         const { token: authToken, user: userData } = response.data;
         setToken(authToken);
         setUser(userData);
-        localStorage.setItem('authToken', authToken);
+        // Store token with proper expiration and remember me preference
+        tokenService.setToken(authToken, 3600, rememberMe); // 1 hour default
         return { success: true, message: response.message };
       } else {
         return { success: false, message: response.message };
@@ -83,7 +90,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     }
     setUser(null);
     setToken(null);
-    localStorage.removeItem('authToken');
+    tokenService.clearToken();
   };
 
   const forgotPassword = async (email: string) => {

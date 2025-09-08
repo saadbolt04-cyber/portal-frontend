@@ -40,6 +40,49 @@ export interface ForgotPasswordRequest {
 }
 
 class ApiService {
+  private getErrorMessage(error: any): string {
+    // Handle different types of errors with user-friendly messages
+    if (error.errors && Array.isArray(error.errors)) {
+      return error.errors.map((err: any) => err.msg).join(', ');
+    }
+    
+    if (error.message) {
+      // Handle specific error types
+      if (error.message.includes('email')) {
+        if (error.message.includes('domain')) {
+          return 'Your email domain is not authorized. Please contact your administrator.';
+        }
+        if (error.message.includes('exists')) {
+          return 'An account with this email already exists. Please try signing in instead.';
+        }
+        if (error.message.includes('invalid')) {
+          return 'Please enter a valid email address.';
+        }
+      }
+      
+      if (error.message.includes('password')) {
+        if (error.message.includes('weak')) {
+          return 'Password must be at least 8 characters with uppercase, lowercase, number, and special character.';
+        }
+        if (error.message.includes('incorrect')) {
+          return 'The email or password you entered is incorrect. Please try again.';
+        }
+      }
+      
+      if (error.message.includes('verification')) {
+        return 'Please verify your email address before signing in. Check your inbox for the verification link.';
+      }
+      
+      if (error.message.includes('blocked') || error.message.includes('suspended')) {
+        return 'Your account has been temporarily suspended. Please contact support for assistance.';
+      }
+      
+      return error.message;
+    }
+    
+    return 'An unexpected error occurred. Please try again.';
+  }
+
   private async makeRequest<T>(
     endpoint: string,
     options: RequestInit = {}
@@ -54,12 +97,21 @@ class ApiService {
       });
 
       const data = await response.json();
+      
+      // If the response is not successful, format the error message
+      if (!data.success && data.message) {
+        return {
+          ...data,
+          message: this.getErrorMessage(data),
+        };
+      }
+      
       return data;
     } catch (error) {
       console.error('API request failed:', error);
       return {
         success: false,
-        message: 'Network error. Please check your connection and try again.',
+        message: 'Unable to connect to the server. Please check your internet connection and try again.',
       };
     }
   }

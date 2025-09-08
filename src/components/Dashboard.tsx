@@ -27,9 +27,9 @@ const Dashboard: React.FC = () => {
           <div className="flex justify-between items-center h-16">
             <div className="flex items-center space-x-4">
               <img
-                src="https://saherflow.com/wp-content/uploads/2021/06/Artboard-1-copy100.svg"
+                src="https://res.cloudinary.com/drnak5yb2/image/upload/v1756278804/light_mode_logo_saher_btbdos.svg"
                 alt="Saher Flow Solutions"
-                className="h-8"
+                className="h-10"
               />
               <h1 className="text-xl font-semibold text-gray-900">Dashboard</h1>
             </div>
